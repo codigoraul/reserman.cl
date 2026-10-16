@@ -16,7 +16,7 @@ const redes = [
 ].filter((r) => r.href) as { key: 'linkedin' | 'instagram' | 'facebook'; label: string; href: string }[];
 ---
 
-<footer class="border-t-4 border-amber-500 bg-steel-800 text-white/75">
+<footer class="border-t-4 border-amber-500 bg-navy-600 text-white/75">
   <div class="container-site pt-14 pb-10">
     <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
       <!-- Columna 1: marca -->
@@ -38,7 +38,7 @@ const redes = [
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={r.label}
-                  class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-900"
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-700"
                 >
                   <Icon name={r.key} class="h-4 w-4" />
                 </a>
@@ -51,7 +51,7 @@ const redes = [
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
-              class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-900"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-700"
             >
               <Icon name="whatsapp" class="h-4 w-4" />
             </a>
@@ -66,7 +66,7 @@ const redes = [
           {
             servicios.map((s) => (
               <li>
-                <a href={`/soluciones/${s.slug}`} class="inline-flex items-center gap-2 transition hover:text-amber-400">
+                <a href={`/soluciones/${s.slug}`} class="inline-flex items-center gap-2 transition hover:text-amber-500">
                   <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" />
                   {s.tituloCorto}
                 </a>
@@ -74,12 +74,12 @@ const redes = [
             ))
           }
           <li class="pt-2">
-            <a href="/somos" class="inline-flex items-center gap-2 transition hover:text-amber-400">
+            <a href="/somos" class="inline-flex items-center gap-2 transition hover:text-amber-500">
               <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" /> Quiénes somos
             </a>
           </li>
           <li>
-            <a href="/contacto" class="inline-flex items-center gap-2 transition hover:text-amber-400">
+            <a href="/contacto" class="inline-flex items-center gap-2 transition hover:text-amber-500">
               <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" /> Contacto
             </a>
           </li>
@@ -91,19 +91,19 @@ const redes = [
         <h3 class="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Contacto</h3>
         <ul class="space-y-4 text-sm">
           <li>
-            <a href={`tel:${contacto.telefonoRaw}`} class="flex items-start gap-3 transition hover:text-amber-400">
+            <a href={`tel:${contacto.telefonoRaw}`} class="flex items-start gap-3 transition hover:text-amber-500">
               <Icon name="phone" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
               <span>{contacto.telefono}</span>
             </a>
           </li>
           <li>
-            <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 transition hover:text-amber-400">
+            <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 transition hover:text-amber-500">
               <Icon name="whatsapp" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
               <span>WhatsApp {contacto.telefono}</span>
             </a>
           </li>
           <li>
-            <a href={`mailto:${contacto.email}`} class="flex items-start gap-3 transition hover:text-amber-400">
+            <a href={`mailto:${contacto.email}`} class="flex items-start gap-3 transition hover:text-amber-500">
               <Icon name="mail" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
               <span>{contacto.email}</span>
             </a>
@@ -127,7 +127,7 @@ const redes = [
       <p>© {year} {contacto.empresa}. Todos los derechos reservados.</p>
       <p>
         Diseño web por
-        <a href="https://diseñopaginas.cl" target="_blank" rel="noopener noreferrer" class="transition hover:text-amber-400">
+        <a href="https://diseñopaginas.cl" target="_blank" rel="noopener noreferrer" class="transition hover:text-amber-500">
           DiseñoPaginas.cl
         </a>
       </p>

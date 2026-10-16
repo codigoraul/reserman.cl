@@ -67,7 +67,7 @@ export const slides: Slide[] = [
     cta: { label: 'Solicitar cotización', href: '/contacto' },
     ctaSecundario: { label: 'Ver soluciones', href: '/soluciones' },
     imagen: '/slides/slide-1.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(30,28,29,0.72)_0%,rgba(47,44,46,0.48)_45%,rgba(30,28,29,0.18)_100%)]',
+    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
   },
   {
     eyebrow: 'Gestión del mantenimiento',
@@ -77,7 +77,7 @@ export const slides: Slide[] = [
     cta: { label: 'Conocer la auditoría', href: '/soluciones/gestion-del-mantenimiento' },
     ctaSecundario: { label: 'Cotizar', href: '/contacto' },
     imagen: '/slides/slide-2.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(30,28,29,0.72)_0%,rgba(47,44,46,0.48)_45%,rgba(30,28,29,0.18)_100%)]',
+    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
   },
   {
     eyebrow: 'Optimización de procesos',
@@ -87,7 +87,7 @@ export const slides: Slide[] = [
     cta: { label: 'Ver metodología', href: '/soluciones/optimizacion-de-procesos' },
     ctaSecundario: { label: 'Cotizar', href: '/contacto' },
     imagen: '/slides/slide-3.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(30,28,29,0.72)_0%,rgba(47,44,46,0.48)_45%,rgba(30,28,29,0.18)_100%)]',
+    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
   },
 ];
 

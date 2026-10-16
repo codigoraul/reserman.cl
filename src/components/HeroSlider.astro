@@ -8,7 +8,7 @@ interface Props {
 const { contacto, slides } = Astro.props;
 ---
 
-<section id="hero" class="relative overflow-hidden bg-steel-800 text-white" aria-roledescription="carrusel" aria-label="Destacados">
+<section id="hero" class="relative overflow-hidden bg-navy-600 text-white" aria-roledescription="carrusel" aria-label="Destacados">
   <div class="relative min-h-[560px] lg:min-h-[640px]">
     {
       slides.map((s, i) => (
@@ -37,7 +37,7 @@ const { contacto, slides } = Astro.props;
 
           <div class="container-site relative flex min-h-[560px] items-center py-20 lg:min-h-[640px]">
             <div class="max-w-2xl">
-              <p class="eyebrow text-amber-400">{s.eyebrow}</p>
+              <p class="eyebrow text-amber-500">{s.eyebrow}</p>
               <h2 class="mt-4 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[3.4rem]" set:html={s.titulo} />
               <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{s.texto}</p>
               <div class="mt-8 flex flex-wrap gap-3">
@@ -73,10 +73,10 @@ const { contacto, slides } = Astro.props;
         }
       </div>
       <div class="pointer-events-auto flex items-center gap-2">
-        <button type="button" class="hero-prev inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-900" aria-label="Anterior">
+        <button type="button" class="hero-prev inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-700" aria-label="Anterior">
           <Icon name="arrow" class="h-5 w-5 rotate-180" />
         </button>
-        <button type="button" class="hero-next inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-900" aria-label="Siguiente">
+        <button type="button" class="hero-next inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-700" aria-label="Siguiente">
           <Icon name="arrow" class="h-5 w-5" />
         </button>
       </div>
@@ -84,10 +84,10 @@ const { contacto, slides } = Astro.props;
   </div>
 
   <!-- Barra de lema -->
-  <div class="relative border-t border-white/10 bg-steel-900/60">
+  <div class="relative border-t border-white/10 bg-navy-600/70">
     <div class="container-site flex flex-wrap items-center justify-center gap-x-10 gap-y-2 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 sm:justify-between">
       {contacto.lema.split('–').map((w) => <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-amber-500" />{w.trim()}</span>)}
-      <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 normal-case tracking-normal text-white transition hover:text-amber-400 sm:inline-flex">
+      <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 normal-case tracking-normal text-white transition hover:text-amber-500 sm:inline-flex">
         <Icon name="whatsapp" class="h-4 w-4" /> {contacto.telefono}
       </a>
     </div>

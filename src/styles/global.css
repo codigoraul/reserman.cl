@@ -4,25 +4,15 @@
 @theme {
   --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
 
-  /* Paleta Reserman (sep-2026): petróleo + ámbar + grises cálidos, sin verdes */
-  --color-navy-500: #14688a; /* Azul Cobalto */
-  --color-navy-600: #00405c; /* Azul Petróleo (logo) */
-  --color-navy-700: #003048;
-
-  --color-amber-300: #ffd06a;
-  --color-amber-400: #ffbb2e;
-  --color-amber-500: #fea901; /* Amarillo Ámbar (logo) */
-  --color-amber-600: #d98f00;
-
+  /* Paleta Reserman — SOLO los 8 colores oficiales */
+  --color-amber-500: #fea901;  /* Amarillo Ámbar (logo) */
+  --color-navy-600: #0b3b5f;   /* Azul Petróleo (logo) */
+  --color-steel-700: #4c484b;  /* Gris Oscuro (logo) */
+  --color-steel-400: #807f7f;  /* Gris Medio (logo) */
+  --color-steel-200: #d4d2d2;  /* Gris Claro */
   --color-orange-500: #e86a10; /* Naranja Cálido */
-  --color-orange-600: #c95a0c;
-
-  --color-steel-100: #f4f1eb; /* Blanco Cálido */
-  --color-steel-200: #d4d2d2; /* Gris Claro */
-  --color-steel-400: #807f7f; /* Gris Medio (logo) */
-  --color-steel-700: #4c484b; /* Gris Oscuro (logo) */
-  --color-steel-800: #2f2c2e;
-  --color-steel-900: #1e1c1d;
+  --color-navy-500: #0b3b5f;   /* Azul Cobalto */
+  --color-steel-100: #f4f1eb;  /* Blanco Cálido */
 
   --container-site: 80rem; /* 1280px */
 }
@@ -35,7 +25,7 @@
     @apply bg-white text-steel-700 antialiased;
   }
   ::selection {
-    @apply bg-amber-500 text-steel-900;
+    @apply bg-amber-500 text-steel-700;
   }
 }
 
@@ -44,7 +34,7 @@
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-md bg-amber-500 px-6 py-3 text-sm font-semibold text-steel-900 transition hover:bg-amber-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
+  @apply inline-flex items-center justify-center gap-2 rounded-md bg-amber-500 px-6 py-3 text-sm font-semibold text-steel-700 transition hover:bg-orange-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
 }
 
 @utility btn-outline {
@@ -52,7 +42,7 @@
 }
 
 @utility btn-navy {
-  @apply inline-flex items-center justify-center gap-2 rounded-md bg-navy-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-navy-500;
+  @apply inline-flex items-center justify-center gap-2 rounded-md bg-navy-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-500;
 }
 
 @utility eyebrow {

@@ -14,17 +14,17 @@ const redes = [
 ].filter((r) => r.href) as { key: 'linkedin' | 'instagram' | 'facebook'; label: string; href: string }[];
 ---
 
-<div class="border-t-4 border-amber-500 bg-steel-800 text-white/85">
+<div class="border-t-4 border-amber-500 bg-navy-600 text-white/85">
   <div class="container-site flex h-10 items-center justify-between text-xs sm:text-[13px]">
     <ul class="flex items-center gap-5">
       <li>
-        <a href={`tel:${contacto.telefonoRaw}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-400">
+        <a href={`tel:${contacto.telefonoRaw}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-500">
           <Icon name="phone" class="h-3.5 w-3.5" />
           <span>{contacto.telefono}</span>
         </a>
       </li>
       <li class="hidden sm:block">
-        <a href={`mailto:${contacto.email}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-400">
+        <a href={`mailto:${contacto.email}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-500">
           <Icon name="mail" class="h-3.5 w-3.5" />
           <span>{contacto.email}</span>
         </a>
@@ -47,7 +47,7 @@ const redes = [
               target="_blank"
               rel="noopener noreferrer"
               aria-label={r.label}
-              class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-400"
+              class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-500"
             >
               <Icon name={r.key} class="h-3.5 w-3.5" />
             </a>
@@ -60,7 +60,7 @@ const redes = [
           target="_blank"
           rel="noopener noreferrer"
           aria-label="WhatsApp"
-          class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-400"
+          class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-500"
         >
           <Icon name="whatsapp" class="h-3.5 w-3.5" />
         </a>

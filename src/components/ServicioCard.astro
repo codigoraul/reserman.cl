@@ -9,7 +9,7 @@ const { servicio: s } = Astro.props;
 
 <a
   href={`/soluciones/${s.slug}`}
-  class="group flex h-full flex-col overflow-hidden rounded-xl border border-steel-200 bg-white transition hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl hover:shadow-steel-900/10"
+  class="group flex h-full flex-col overflow-hidden rounded-xl border border-steel-200 bg-white transition hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl hover:shadow-navy-600/10"
 >
   <!-- Cabecera con foto -->
   <div class="relative h-48 overflow-hidden bg-steel-700">
@@ -26,8 +26,8 @@ const { servicio: s } = Astro.props;
         />
       )
     }
-    <div class="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,29,43,0.85)_0%,rgba(0,29,43,0.25)_60%,transparent_100%)]"></div>
-    <span class="absolute bottom-4 left-5 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500 text-steel-900 shadow-lg">
+    <div class="absolute inset-0 bg-[linear-gradient(to_top,rgba(11,59,95,0.85)_0%,rgba(11,59,95,0.25)_60%,transparent_100%)]"></div>
+    <span class="absolute bottom-4 left-5 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500 text-steel-700 shadow-lg">
       <Icon name={s.icono} class="h-6 w-6" />
     </span>
   </div>
