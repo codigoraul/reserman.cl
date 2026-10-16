@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ServicioCard from '../../components/ServicioCard.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { getServicios } from '../../lib/wp';
+
+const servicios = await getServicios();
+---
+
+<Layout
+  title="Soluciones"
+  description="Gestión del mantenimiento, optimización de procesos, servicios de mantenimiento y servicios de ingeniería para la industria."
+>
+  <PageHeader
+    eyebrow="Soluciones"
+    titulo="Soluciones industriales para tu planta"
+    texto="Cuatro líneas de servicio que cubren desde la auditoría de tu gestión hasta la ejecución en terreno."
+    crumbs={[{ label: 'Soluciones' }]}
+    imagen="/headers/header-soluciones.webp"
+  />
+
+  <section class="py-20">
+    <div class="container-site grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {servicios.map((s) => <ServicioCard servicio={s} />)}
+    </div>
+  </section>
+
+  <CtaBanner />
+</Layout>

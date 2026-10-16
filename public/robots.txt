@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reserman.cl/sitemap-index.xml

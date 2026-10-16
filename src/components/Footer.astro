@@ -1,0 +1,136 @@
+---
+import Icon from './Icon.astro';
+import type { Contacto, Servicio } from '../data/site';
+
+interface Props {
+  contacto: Contacto;
+  servicios: Servicio[];
+}
+const { contacto, servicios } = Astro.props;
+const year = new Date().getFullYear();
+
+const redes = [
+  { key: 'linkedin', label: 'LinkedIn', href: contacto.redes.linkedin },
+  { key: 'instagram', label: 'Instagram', href: contacto.redes.instagram },
+  { key: 'facebook', label: 'Facebook', href: contacto.redes.facebook },
+].filter((r) => r.href) as { key: 'linkedin' | 'instagram' | 'facebook'; label: string; href: string }[];
+---
+
+<footer class="border-t-4 border-amber-500 bg-steel-800 text-white/75">
+  <div class="container-site pt-14 pb-10">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Columna 1: marca -->
+      <div>
+        <a href="/" class="inline-block" aria-label="Reserman – Inicio">
+          <img src="/logo-reserman-blanco.svg" alt={contacto.empresa} width="864" height="169" class="h-auto w-full max-w-[240px]" />
+        </a>
+        <p class="mt-5 italic text-white/80">{contacto.lema}</p>
+        <p class="mt-3 max-w-sm text-sm leading-relaxed">
+          Un partner estratégico para optimizar tus procesos productivos: gestión del mantenimiento, optimización de
+          procesos, servicios de mantenimiento e ingeniería para la industria.
+        </p>
+        <ul class="mt-6 flex items-center gap-2">
+          {
+            redes.map((r) => (
+              <li>
+                <a
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.label}
+                  class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-900"
+                >
+                  <Icon name={r.key} class="h-4 w-4" />
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href={`https://wa.me/${contacto.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-amber-500 hover:text-steel-900"
+            >
+              <Icon name="whatsapp" class="h-4 w-4" />
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 2: soluciones -->
+      <div>
+        <h3 class="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Soluciones</h3>
+        <ul class="space-y-3 text-sm">
+          {
+            servicios.map((s) => (
+              <li>
+                <a href={`/soluciones/${s.slug}`} class="inline-flex items-center gap-2 transition hover:text-amber-400">
+                  <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" />
+                  {s.tituloCorto}
+                </a>
+              </li>
+            ))
+          }
+          <li class="pt-2">
+            <a href="/somos" class="inline-flex items-center gap-2 transition hover:text-amber-400">
+              <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" /> Quiénes somos
+            </a>
+          </li>
+          <li>
+            <a href="/contacto" class="inline-flex items-center gap-2 transition hover:text-amber-400">
+              <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" /> Contacto
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: contacto -->
+      <div>
+        <h3 class="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Contacto</h3>
+        <ul class="space-y-4 text-sm">
+          <li>
+            <a href={`tel:${contacto.telefonoRaw}`} class="flex items-start gap-3 transition hover:text-amber-400">
+              <Icon name="phone" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+              <span>{contacto.telefono}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="flex items-start gap-3 transition hover:text-amber-400">
+              <Icon name="whatsapp" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+              <span>WhatsApp {contacto.telefono}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${contacto.email}`} class="flex items-start gap-3 transition hover:text-amber-400">
+              <Icon name="mail" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+              <span>{contacto.email}</span>
+            </a>
+          </li>
+          <li class="flex items-start gap-3">
+            <Icon name="pin" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+            <span>
+              {contacto.direccion}<br />
+              {contacto.comuna}, {contacto.ciudad}
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <Icon name="clock" class="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+            <span>{contacto.horario}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center">
+      <p>© {year} {contacto.empresa}. Todos los derechos reservados.</p>
+      <p>
+        Diseño web por
+        <a href="https://diseñopaginas.cl" target="_blank" rel="noopener noreferrer" class="transition hover:text-amber-400">
+          DiseñoPaginas.cl
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

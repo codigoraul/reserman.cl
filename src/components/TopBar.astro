@@ -1,0 +1,70 @@
+---
+import Icon from './Icon.astro';
+import type { Contacto } from '../data/site';
+
+interface Props {
+  contacto: Contacto;
+}
+const { contacto } = Astro.props;
+
+const redes = [
+  { key: 'linkedin', label: 'LinkedIn', href: contacto.redes.linkedin },
+  { key: 'instagram', label: 'Instagram', href: contacto.redes.instagram },
+  { key: 'facebook', label: 'Facebook', href: contacto.redes.facebook },
+].filter((r) => r.href) as { key: 'linkedin' | 'instagram' | 'facebook'; label: string; href: string }[];
+---
+
+<div class="border-t-4 border-amber-500 bg-steel-800 text-white/85">
+  <div class="container-site flex h-10 items-center justify-between text-xs sm:text-[13px]">
+    <ul class="flex items-center gap-5">
+      <li>
+        <a href={`tel:${contacto.telefonoRaw}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-400">
+          <Icon name="phone" class="h-3.5 w-3.5" />
+          <span>{contacto.telefono}</span>
+        </a>
+      </li>
+      <li class="hidden sm:block">
+        <a href={`mailto:${contacto.email}`} class="inline-flex items-center gap-1.5 transition hover:text-amber-400">
+          <Icon name="mail" class="h-3.5 w-3.5" />
+          <span>{contacto.email}</span>
+        </a>
+      </li>
+      <li class="hidden lg:block">
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="pin" class="h-3.5 w-3.5" />
+          <span>{contacto.direccion}, {contacto.comuna}</span>
+        </span>
+      </li>
+    </ul>
+
+    <ul class="flex items-center gap-1">
+      <li class="mr-2 hidden md:block text-white/60">{contacto.horario}</li>
+      {
+        redes.map((r) => (
+          <li>
+            <a
+              href={r.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={r.label}
+              class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-400"
+            >
+              <Icon name={r.key} class="h-3.5 w-3.5" />
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a
+          href={`https://wa.me/${contacto.whatsapp}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+          class="inline-flex h-7 w-7 items-center justify-center rounded transition hover:bg-white/10 hover:text-amber-400"
+        >
+          <Icon name="whatsapp" class="h-3.5 w-3.5" />
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

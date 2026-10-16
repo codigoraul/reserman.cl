@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
+import type { Contacto } from '../data/site';
+interface Props {
+  contacto: Contacto;
+  titulo?: string;
+}
+const { contacto, titulo = 'Conversemos sobre tu planta' } = Astro.props;
+---
+
+<section id="contacto" class="bg-steel-100 py-20">
+  <div class="container-site grid gap-12 lg:grid-cols-12">
+    <div class="lg:col-span-5">
+      <p class="eyebrow">Contacto</p>
+      <h2 class="mt-3 text-3xl font-bold text-navy-600 sm:text-4xl">{titulo}</h2>
+      <p class="mt-4 leading-relaxed text-steel-700">
+        Cuéntanos qué necesitas y te respondemos a la brevedad con una propuesta a la medida de tu operación.
+      </p>
+
+      <ul class="mt-8 space-y-5">
+        <li class="flex items-start gap-4">
+          <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-navy-600 shadow-sm"><Icon name="phone" class="h-5 w-5" /></span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-steel-400">Teléfono / WhatsApp</p>
+            <a href={`tel:${contacto.telefonoRaw}`} class="font-semibold text-navy-600 hover:text-orange-500">{contacto.telefono}</a>
+          </div>
+        </li>
+        <li class="flex items-start gap-4">
+          <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-navy-600 shadow-sm"><Icon name="mail" class="h-5 w-5" /></span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-steel-400">Email</p>
+            <a href={`mailto:${contacto.email}`} class="font-semibold text-navy-600 hover:text-orange-500">{contacto.email}</a>
+          </div>
+        </li>
+        <li class="flex items-start gap-4">
+          <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-navy-600 shadow-sm"><Icon name="pin" class="h-5 w-5" /></span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-steel-400">Oficina</p>
+            <p class="font-semibold text-navy-600">{contacto.direccion}</p>
+            <p class="text-sm text-steel-700">{contacto.comuna}, {contacto.ciudad}</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4">
+          <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-navy-600 shadow-sm"><Icon name="clock" class="h-5 w-5" /></span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-steel-400">Horario</p>
+            <p class="font-semibold text-navy-600">{contacto.horario}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-steel-200 bg-white p-6 shadow-sm sm:p-8 lg:col-span-7">
+      <h3 class="text-lg font-bold text-navy-600">Escríbenos</h3>
+      <p class="mb-6 mt-1 text-sm text-steel-400">Respondemos en horario hábil.</p>
+      <ContactForm contacto={contacto} />
+    </div>
+  </div>
+</section>

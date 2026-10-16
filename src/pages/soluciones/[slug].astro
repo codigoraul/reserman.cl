@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { getContacto, getServicios } from '../../lib/wp';
+
+export async function getStaticPaths() {
+  const servicios = await getServicios();
+  return servicios.map((s) => ({ params: { slug: s.slug }, props: { servicio: s } }));
+}
+
+const { servicio: s } = Astro.props;
+const [contacto, todos] = await Promise.all([getContacto(), getServicios()]);
+const otros = todos.filter((o) => o.slug !== s.slug);
+---
+
+<Layout title={s.titulo} description={s.resumen}>
+  <PageHeader
+    eyebrow={s.pregunta ?? 'Soluciones'}
+    titulo={s.claim ?? s.titulo}
+    texto={s.claim ? s.titulo : s.resumen}
+    crumbs={[{ label: 'Soluciones', href: '/soluciones' }, { label: s.tituloCorto }]}
+    imagen={s.imagen}
+  />
+
+  <section class="py-16 lg:py-20">
+    <div class="container-site grid gap-12 lg:grid-cols-12">
+      <article class="prose-wp text-steel-700 lg:col-span-8">
+        <div class="mb-8 flex items-center gap-4">
+          <span class="inline-flex h-14 w-14 items-center justify-center rounded-lg bg-amber-500 text-steel-900">
+            <Icon name={s.icono} class="h-7 w-7" />
+          </span>
+          <p class="text-lg font-semibold text-navy-600">{s.resumen}</p>
+        </div>
+        <Fragment set:html={s.contenido} />
+      </article>
+
+      <aside class="space-y-6 lg:col-span-4">
+        {
+          s.items && (
+            <div class="rounded-xl border border-steel-200 bg-steel-100 p-6">
+              <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">Incluye</h2>
+              <ul class="mt-4 space-y-2.5 text-sm text-navy-600">
+                {s.items.map((it) => (
+                  <li class="flex items-start gap-2">
+                    <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-orange-500" />
+                    <span>{it}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <div class="rounded-xl border border-steel-200 bg-white p-6 shadow-sm">
+          <h2 class="text-lg font-bold text-navy-600">Cotiza este servicio</h2>
+          <p class="mb-5 mt-1 text-sm text-steel-400">Te respondemos en horario hábil.</p>
+          <ContactForm contacto={contacto} compact />
+        </div>
+
+        <div class="rounded-xl border border-steel-200 p-6">
+          <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-steel-400">Otras soluciones</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            {
+              otros.map((o) => (
+                <li>
+                  <a href={`/soluciones/${o.slug}`} class="inline-flex items-center gap-2 font-semibold text-navy-600 hover:text-orange-500">
+                    <Icon name="arrow" class="h-3.5 w-3.5 text-amber-500" /> {o.tituloCorto}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBanner />
+</Layout>

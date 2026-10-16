@@ -1,0 +1,148 @@
+---
+import Icon from './Icon.astro';
+import type { Contacto, Slide } from '../data/site';
+interface Props {
+  contacto: Contacto;
+  slides: Slide[];
+}
+const { contacto, slides } = Astro.props;
+---
+
+<section id="hero" class="relative overflow-hidden bg-steel-800 text-white" aria-roledescription="carrusel" aria-label="Destacados">
+  <div class="relative min-h-[560px] lg:min-h-[640px]">
+    {
+      slides.map((s, i) => (
+        <article
+          class:list={['hero-slide absolute inset-0 transition-opacity duration-700', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+          data-index={i}
+          aria-hidden={i !== 0}
+          aria-roledescription="diapositiva"
+          aria-label={`${i + 1} de ${slides.length}`}
+        >
+          {/* Fondo: imagen si existe, si no gradiente */}
+          {s.imagen ? (
+            <img
+              src={s.imagen}
+              alt=""
+              class="absolute inset-0 h-full w-full object-cover"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          ) : null}
+          <div class:list={['absolute inset-0', s.gradiente]} />
+          <div
+            class="absolute inset-0 opacity-[0.06]"
+            style="background-image: linear-gradient(rgba(255,255,255,.7) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.7) 1px, transparent 1px); background-size: 48px 48px;"
+          />
+
+          <div class="container-site relative flex min-h-[560px] items-center py-20 lg:min-h-[640px]">
+            <div class="max-w-2xl">
+              <p class="eyebrow text-amber-400">{s.eyebrow}</p>
+              <h2 class="mt-4 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[3.4rem]" set:html={s.titulo} />
+              <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{s.texto}</p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                <a href={s.cta.href} class="btn-primary">
+                  {s.cta.label} <Icon name="arrow" class="h-4 w-4" />
+                </a>
+                {s.ctaSecundario && (
+                  <a href={s.ctaSecundario.href} class="btn-outline">
+                    {s.ctaSecundario.label}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+
+    <!-- Controles -->
+    <div class="container-site pointer-events-none absolute inset-x-0 bottom-8 z-10 flex items-center justify-between">
+      <div class="pointer-events-auto flex items-center gap-2" role="tablist" aria-label="Seleccionar diapositiva">
+        {
+          slides.map((_, i) => (
+            <button
+              type="button"
+              class:list={['hero-dot h-2.5 rounded-full transition-all', i === 0 ? 'w-8 bg-amber-500' : 'w-2.5 bg-white/40 hover:bg-white/70']}
+              data-goto={i}
+              role="tab"
+              aria-selected={i === 0}
+              aria-label={`Ir a diapositiva ${i + 1}`}
+            />
+          ))
+        }
+      </div>
+      <div class="pointer-events-auto flex items-center gap-2">
+        <button type="button" class="hero-prev inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-900" aria-label="Anterior">
+          <Icon name="arrow" class="h-5 w-5 rotate-180" />
+        </button>
+        <button type="button" class="hero-next inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-amber-500 hover:bg-amber-500 hover:text-steel-900" aria-label="Siguiente">
+          <Icon name="arrow" class="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de lema -->
+  <div class="relative border-t border-white/10 bg-steel-900/60">
+    <div class="container-site flex flex-wrap items-center justify-center gap-x-10 gap-y-2 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 sm:justify-between">
+      {contacto.lema.split('–').map((w) => <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-amber-500" />{w.trim()}</span>)}
+      <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="hidden items-center gap-2 normal-case tracking-normal text-white transition hover:text-amber-400 sm:inline-flex">
+        <Icon name="whatsapp" class="h-4 w-4" /> {contacto.telefono}
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.getElementById('hero');
+  if (root) {
+    const slides = [...root.querySelectorAll<HTMLElement>('.hero-slide')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('.hero-dot')];
+    let current = 0;
+    let timer: number | undefined;
+    const INTERVAL = 6500;
+
+    const show = (n: number) => {
+      current = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        const on = i === current;
+        s.classList.toggle('opacity-100', on);
+        s.classList.toggle('opacity-0', !on);
+        s.classList.toggle('pointer-events-none', !on);
+        s.setAttribute('aria-hidden', String(!on));
+      });
+      dots.forEach((d, i) => {
+        const on = i === current;
+        d.classList.toggle('w-8', on);
+        d.classList.toggle('bg-amber-500', on);
+        d.classList.toggle('w-2.5', !on);
+        d.classList.toggle('bg-white/40', !on);
+        d.setAttribute('aria-selected', String(on));
+      });
+    };
+    const restart = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(() => show(current + 1), INTERVAL);
+    };
+
+    root.querySelector('.hero-next')?.addEventListener('click', () => { show(current + 1); restart(); });
+    root.querySelector('.hero-prev')?.addEventListener('click', () => { show(current - 1); restart(); });
+    dots.forEach((d) => d.addEventListener('click', () => { show(Number(d.dataset.goto)); restart(); }));
+
+    // Pausa al pasar el mouse / cuando la pestaña no está visible
+    root.addEventListener('mouseenter', () => window.clearInterval(timer));
+    root.addEventListener('mouseleave', restart);
+    document.addEventListener('visibilitychange', () => (document.hidden ? window.clearInterval(timer) : restart()));
+
+    // Swipe táctil
+    let x0 = 0;
+    root.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+    root.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) { show(dx < 0 ? current + 1 : current - 1); restart(); }
+    });
+
+    if (slides.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) restart();
+  }
+</script>

@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import TopBar from '../components/TopBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { getContacto, getServicios } from '../lib/wp';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+const { title, description, ogImage = '/logo-reserman.png' } = Astro.props;
+
+const [contacto, servicios] = await Promise.all([getContacto(), getServicios()]);
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://reserman.cl').href;
+const fullTitle = title.includes('Reserman') ? title : `${title} | Reserman – ${contacto.tagline}`;
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: contacto.empresa,
+  url: Astro.site?.href ?? 'https://reserman.cl',
+  logo: new URL('/logo-reserman.png', Astro.site ?? 'https://reserman.cl').href,
+  email: contacto.email,
+  telephone: contacto.telefonoRaw,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contacto.direccion,
+    addressLocality: contacto.comuna,
+    addressRegion: 'Región Metropolitana',
+    addressCountry: 'CL',
+  },
+  sameAs: Object.values(contacto.redes).filter(Boolean),
+};
+---
+
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#00405c" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Reserman" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site ?? 'https://reserman.cl').href} />
+    <meta property="og:locale" content="es_CL" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <TopBar contacto={contacto} />
+    <Header contacto={contacto} servicios={servicios} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer contacto={contacto} servicios={servicios} />
+    <WhatsAppButton numero={contacto.whatsapp} />
+  </body>
+</html>

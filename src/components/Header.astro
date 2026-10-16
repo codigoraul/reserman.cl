@@ -1,0 +1,149 @@
+---
+import Icon from './Icon.astro';
+import type { Contacto, Servicio } from '../data/site';
+
+interface Props {
+  contacto: Contacto;
+  servicios: Servicio[];
+}
+const { contacto, servicios } = Astro.props;
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+  href === '/' ? current === '/' : current === href || current.startsWith(href + '/');
+
+const nav = [
+  { label: 'Inicio', href: '/' },
+  { label: 'Somos', href: '/somos' },
+  {
+    label: 'Soluciones',
+    href: '/soluciones',
+    children: servicios.map((s) => ({ label: s.tituloCorto, href: `/soluciones/${s.slug}` })),
+  },
+  { label: 'Contacto', href: '/contacto' },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-steel-200 bg-white/95 backdrop-blur">
+  <div class="container-site flex h-20 items-center justify-between gap-6">
+    <a href="/" class="flex shrink-0 items-center" aria-label={`${contacto.empresa} – Inicio`}>
+      <img src="/logo-reserman.svg" alt={`${contacto.empresa} – ${contacto.tagline}`} width="864" height="149" class="h-[35px] w-auto sm:h-[41px]" />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Principal">
+      {
+        nav.map((item) =>
+          item.children ? (
+            <div class="group relative">
+              <a
+                href={item.href}
+                class:list={[
+                  'inline-flex items-center gap-1 rounded-md px-4 py-2 text-[13px] font-semibold uppercase tracking-wide transition',
+                  isActive(item.href) ? 'text-orange-500' : 'text-navy-600 hover:text-orange-500',
+                ]}
+                aria-haspopup="true"
+              >
+                {item.label}
+                <Icon name="chevron" class="h-4 w-4 transition group-hover:rotate-180" />
+              </a>
+              <div class="invisible absolute left-0 top-full pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <ul class="w-72 rounded-lg border border-steel-200 bg-white py-2 shadow-xl shadow-steel-900/10">
+                  {item.children.map((c) => (
+                    <li>
+                      <a
+                        href={c.href}
+                        class:list={[
+                          'block px-5 py-2.5 text-sm transition hover:bg-steel-100 hover:text-navy-600',
+                          isActive(c.href) ? 'font-semibold text-orange-500' : 'text-steel-700',
+                        ]}
+                      >
+                        {c.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <a
+              href={item.href}
+              class:list={[
+                'rounded-md px-4 py-2 text-[13px] font-semibold uppercase tracking-wide transition',
+                isActive(item.href) ? 'text-orange-500' : 'text-navy-600 hover:text-orange-500',
+              ]}
+            >
+              {item.label}
+            </a>
+          )
+        )
+      }
+      <a href="/contacto" class="btn-primary ml-3 !py-2.5">Cotizar</a>
+    </nav>
+
+    <!-- Mobile toggle -->
+    <button
+      type="button"
+      id="menu-toggle"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-md text-navy-600 lg:hidden"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <Icon name="menu" class="h-6 w-6 icon-open" />
+      <Icon name="close" class="hidden h-6 w-6 icon-close" />
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden border-t border-steel-200 bg-white lg:hidden">
+    <nav class="container-site py-3" aria-label="Móvil">
+      <ul class="divide-y divide-steel-200">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'block py-3 text-sm font-semibold uppercase tracking-wide',
+                  isActive(item.href) ? 'text-orange-500' : 'text-navy-600',
+                ]}
+              >
+                {item.label}
+              </a>
+              {item.children && (
+                <ul class="mb-2 space-y-1 pl-4">
+                  {item.children.map((c) => (
+                    <li>
+                      <a href={c.href} class="block py-1.5 text-sm text-steel-700">
+                        {c.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-4 flex gap-3">
+        <a href="/contacto" class="btn-primary flex-1">Cotizar</a>
+        <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="btn-navy flex-1">
+          <Icon name="whatsapp" class="h-4 w-4" /> WhatsApp
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    btn.querySelector('.icon-open')?.classList.toggle('hidden', open);
+    btn.querySelector('.icon-close')?.classList.toggle('hidden', !open);
+  });
+</script>
