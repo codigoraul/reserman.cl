@@ -105,18 +105,25 @@ const nav = [
               <a
                 href={item.href}
                 class:list={[
-                  'block py-3 text-sm font-semibold uppercase tracking-wide',
+                  'flex min-h-[52px] items-center text-base font-bold uppercase tracking-wide',
                   isActive(item.href) ? 'text-orange-500' : 'text-navy-600',
                 ]}
               >
                 {item.label}
               </a>
               {item.children && (
-                <ul class="mb-2 space-y-1 pl-4">
+                <ul class="mb-4 mt-1 divide-y divide-steel-200/70">
                   {item.children.map((c) => (
                     <li>
-                      <a href={c.href} class="block py-1.5 text-sm text-steel-700">
-                        {c.label}
+                      <a
+                        href={c.href}
+                        class:list={[
+                          'group flex min-h-[50px] items-center justify-between gap-3 border-l-2 pl-4 pr-3 text-base font-medium transition-colors hover:bg-steel-100 hover:text-navy-600 active:bg-steel-100',
+                          isActive(c.href) ? 'border-orange-500 bg-steel-100 font-semibold text-orange-500' : 'border-amber-500 text-navy-600',
+                        ]}
+                      >
+                        <span>{c.label}</span>
+                        <Icon name="arrow" class="h-4 w-4 shrink-0 text-steel-400 transition group-hover:translate-x-0.5 group-hover:text-orange-500" />
                       </a>
                     </li>
                   ))}
@@ -127,8 +134,8 @@ const nav = [
         }
       </ul>
       <div class="mt-4 flex gap-3">
-        <a href="/contacto" class="btn-primary flex-1">Cotizar</a>
-        <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="btn-navy flex-1">
+        <a href="/contacto" class="btn-primary flex-1 !py-3">Cotizar</a>
+        <a href={`https://wa.me/${contacto.whatsapp}`} target="_blank" rel="noopener noreferrer" class="btn-navy flex-1 !py-3">
           <Icon name="whatsapp" class="h-4 w-4" /> WhatsApp
         </a>
       </div>
