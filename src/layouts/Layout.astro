@@ -45,6 +45,9 @@ const orgSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0b3b5f" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Reserman" />
@@ -54,6 +57,7 @@ const orgSchema = {
     <meta property="og:image" content={new URL(ogImage, Astro.site ?? 'https://reserman.cl').href} />
     <meta property="og:locale" content="es_CL" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
   </head>
   <body class="flex min-h-screen flex-col">
@@ -64,5 +68,46 @@ const orgSchema = {
     </main>
     <Footer contacto={contacto} servicios={servicios} />
     <WhatsAppButton numero={contacto.whatsapp} />
+
+    <script>
+      // Scroll reveal: marca bloques de cada sección y los revela al entrar en pantalla
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+        const isGrid = (el: Element) => el.classList.contains('grid') && el.children.length > 1;
+        const expand = (list: Element[]) => list.flatMap((el) => (isGrid(el) ? [...el.children] : [el]));
+        const targets: Element[][] = [];
+
+        document.querySelectorAll('main > section:not(#hero), footer').forEach((section) => {
+          const box = section.querySelector(':scope > .container-site') ?? section.querySelector('.container-site');
+          if (!box) return;
+          targets.push(expand([...box.children]));
+        });
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return;
+              const el = e.target as HTMLElement;
+              el.classList.add('rv-in');
+              io.unobserve(el);
+              // Limpia para no interferir con los hover (transiciones propias de cada card)
+              window.setTimeout(() => {
+                el.classList.remove('rv', 'rv-in');
+                el.style.transitionDelay = '';
+              }, 1800);
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+        );
+
+        targets.forEach((group) =>
+          group.forEach((el, i) => {
+            const h = el as HTMLElement;
+            h.classList.add('rv');
+            h.style.transitionDelay = `${Math.min(i, 6) * 90}ms`;
+            io.observe(h);
+          }),
+        );
+      }
+    </script>
   </body>
 </html>

@@ -13,7 +13,7 @@ const { contacto, slides } = Astro.props;
     {
       slides.map((s, i) => (
         <article
-          class:list={['hero-slide absolute inset-0 transition-opacity duration-700', i === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none']}
+          class:list={['hero-slide absolute inset-0 transition-opacity duration-700', i === 0 ? 'opacity-100 is-active' : 'opacity-0 pointer-events-none']}
           data-index={i}
           aria-hidden={i !== 0}
           aria-roledescription="diapositiva"
@@ -24,7 +24,7 @@ const { contacto, slides } = Astro.props;
             <img
               src={s.imagen}
               alt=""
-              class="absolute inset-0 h-full w-full object-cover"
+              class="hero-bg absolute inset-0 h-full w-full object-cover"
               loading={i === 0 ? 'eager' : 'lazy'}
               decoding="async"
             />
@@ -37,10 +37,10 @@ const { contacto, slides } = Astro.props;
 
           <div class="container-site relative flex min-h-[560px] items-center py-20 lg:min-h-[640px]">
             <div class="max-w-2xl">
-              <p class="eyebrow text-amber-500">{s.eyebrow}</p>
-              <h2 class="mt-4 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[3.4rem]" set:html={s.titulo} />
-              <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80">{s.texto}</p>
-              <div class="mt-8 flex flex-wrap gap-3">
+              <p class="hero-anim eyebrow text-amber-500" style="--d:.1s">{s.eyebrow}</p>
+              <h2 class="hero-anim mt-4 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-[3.4rem]" style="--d:.25s" set:html={s.titulo} />
+              <p class="hero-anim mt-6 max-w-xl text-lg leading-relaxed text-white/80" style="--d:.45s">{s.texto}</p>
+              <div class="hero-anim mt-8 flex flex-wrap gap-3" style="--d:.65s">
                 <a href={s.cta.href} class="btn-primary">
                   {s.cta.label} <Icon name="arrow" class="h-4 w-4" />
                 </a>
@@ -107,6 +107,7 @@ const { contacto, slides } = Astro.props;
       current = (n + slides.length) % slides.length;
       slides.forEach((s, i) => {
         const on = i === current;
+        s.classList.toggle('is-active', on);
         s.classList.toggle('opacity-100', on);
         s.classList.toggle('opacity-0', !on);
         s.classList.toggle('pointer-events-none', !on);

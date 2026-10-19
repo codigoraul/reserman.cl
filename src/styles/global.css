@@ -68,3 +68,36 @@
 .prose-wp strong {
   @apply font-semibold text-navy-600;
 }
+
+/* ───── Movimiento ───── */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-zoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Slider: el texto entra escalonado cada vez que la diapositiva se activa */
+  .hero-slide.is-active .hero-anim {
+    animation: hero-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+  }
+  .hero-slide.is-active .hero-bg {
+    animation: hero-zoom 9s ease-out both;
+  }
+
+  /* Scroll reveal: solo se oculta si JS está activo (clase .js en <html>) */
+  .js .rv {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .js .rv.rv-in {
+    opacity: 1;
+    transform: none;
+  }
+}
