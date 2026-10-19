@@ -23,6 +23,11 @@ const { contacto, slides } = Astro.props;
           {s.imagen ? (
             <img
               src={s.imagen}
+              srcset={`${s.imagen.replace('.webp', '-1200.webp')} 1200w, ${s.imagen} 1920w`}
+              sizes="100vw"
+              width="1920"
+              height="900"
+              fetchpriority={i === 0 ? 'high' : 'auto'}
               alt=""
               class="hero-bg absolute inset-0 h-full w-full object-cover"
               loading={i === 0 ? 'eager' : 'lazy'}
@@ -99,6 +104,8 @@ const { contacto, slides } = Astro.props;
   if (root) {
     const slides = [...root.querySelectorAll<HTMLElement>('.hero-slide')];
     const dots = [...root.querySelectorAll<HTMLButtonElement>('.hero-dot')];
+    // Precarga las demás diapositivas una vez cargada la página (evita fondo vacío al cambiar)
+    window.addEventListener('load', () => root.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => (img.loading = 'eager')), { once: true });
     let current = 0;
     let timer: number | undefined;
     const INTERVAL = 6500;

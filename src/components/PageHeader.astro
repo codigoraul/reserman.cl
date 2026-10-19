@@ -7,13 +7,14 @@ interface Props {
   imagen?: string;
 }
 const { eyebrow, titulo, texto, crumbs = [], imagen } = Astro.props;
+const srcset = imagen?.startsWith('/headers/') ? `${imagen.replace('.webp', '-1000.webp')} 1000w, ${imagen} 1920w` : undefined;
 ---
 
 <section class="relative overflow-hidden bg-navy-600 text-white">
   {
     imagen && (
       <>
-        <img src={imagen} alt="" width="1920" height="640" class="absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" />
+        <img src={imagen} srcset={srcset} sizes="100vw" alt="" width="1920" height="640" class="absolute inset-0 h-full w-full object-cover" loading="eager" fetchpriority="high" decoding="async" />
         <div class="absolute inset-0 bg-[linear-gradient(100deg,rgba(11,59,95,0.88)_0%,rgba(11,59,95,0.7)_55%,rgba(11,59,95,0.35)_100%)]" />
       </>
     )
