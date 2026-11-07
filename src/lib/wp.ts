@@ -7,7 +7,7 @@
  *   - Contacto:    ACF Options Page expuesta en
  *                  GET {WP_URL}/wp-json/acf/v3/options/options   (plugin ACF to REST API)
  *                  o endpoint propio GET {WP_URL}/wp-json/reserman/v1/contacto
- *   - Somos:       página slug `somos` + ACF (mision, vision, valores)
+ *   - Somos:       página slug `somos` + ACF (intro, mision, vision)
  *
  * Si WP no responde, devuelve los datos de src/data/site.ts.
  * Todo se resuelve en build (output: static).
@@ -119,7 +119,7 @@ export async function getServicios(): Promise<Servicio[]> {
         titulo: stripHtml(p.title.rendered),
         tituloCorto: a.titulo_corto ?? stripHtml(p.title.rendered),
         resumen: a.resumen ?? stripHtml(p.excerpt?.rendered ?? '').slice(0, 220),
-        icono: a.icono ?? 'gestion',
+        icono: a.icono ?? 'proyectos',
         pregunta: a.pregunta,
         claim: a.claim,
         items,
@@ -140,7 +140,7 @@ export async function getServicio(slug: string): Promise<Servicio | undefined> {
 interface WpPage {
   title: { rendered: string };
   content: { rendered: string };
-  acf?: { intro?: string; mision?: string; vision?: string; valores?: { valor: string }[] | string[] };
+  acf?: { intro?: string; mision?: string; vision?: string };
 }
 
 export async function getSomos(): Promise<Somos> {
@@ -148,15 +148,12 @@ export async function getSomos(): Promise<Somos> {
   const p = Array.isArray(data) ? data[0] : undefined;
   if (!p?.acf?.mision) return somosFijo;
   const a = p.acf;
-  const valores = Array.isArray(a.valores)
-    ? a.valores.map((v: any) => (typeof v === 'string' ? v : v.valor)).filter(Boolean)
-    : somosFijo.valores;
   return {
+    ...somosFijo,
     titulo: stripHtml(p.title.rendered),
     intro: a.intro ?? stripHtml(p.content.rendered),
     mision: a.mision ?? somosFijo.mision,
     vision: a.vision ?? somosFijo.vision,
-    valores,
   };
 }
 

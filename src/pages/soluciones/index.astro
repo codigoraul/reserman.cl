@@ -10,18 +10,18 @@ const servicios = await getServicios();
 
 <Layout
   title="Soluciones"
-  description="Gestión del mantenimiento, optimización de procesos, servicios de mantenimiento y servicios de ingeniería para la industria."
+  description="Ingeniería de proyectos, soldadura y fabricación, mantenimiento, montaje mecánico, ingeniería eléctrica y obras civiles menores para la industria."
 >
   <PageHeader
     eyebrow="Soluciones"
     titulo="Soluciones industriales para tu planta"
-    texto="Cuatro líneas de servicio que cubren desde la auditoría de tu gestión hasta la ejecución en terreno."
+    texto="Seis servicios que cubren desde la ingeniería y la fabricación hasta el mantenimiento, el montaje, lo eléctrico y las obras civiles."
     crumbs={[{ label: 'Soluciones' }]}
     imagen="/headers/header-soluciones.webp"
   />
 
   <section class="py-20">
-    <div class="container-site grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="container-site grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {servicios.map((s) => <ServicioCard servicio={s} />)}
     </div>
   </section>

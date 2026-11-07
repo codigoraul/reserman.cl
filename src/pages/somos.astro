@@ -2,54 +2,100 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import CtaBanner from '../components/CtaBanner.astro';
-import Icon from '../components/Icon.astro';
 import { getSomos } from '../lib/wp';
+import { clientes } from '../data/site';
 
 const somos = await getSomos();
 ---
 
 <Layout
   title="Quiénes somos"
-  description="Reserman nace de más de una década liderando departamentos de mantenimiento, ingeniería y prevención de riesgos en la industria alimentaria, química y cosmética."
+  description="Reserman: 10 años prestando servicios de ingeniería y mantenimiento industrial a empresas de los sectores minero, alimentario, cosmético y químico."
 >
   <PageHeader
     eyebrow="Somos"
     titulo={somos.titulo}
-    texto="Experiencia real de planta, ahora al servicio de tu operación."
+    texto="Un socio de confianza en ingeniería y mantenimiento industrial."
     crumbs={[{ label: 'Somos' }]}
     imagen="/headers/header-somos.webp"
   />
 
-  <section class="py-20">
-    <div class="container-site grid gap-12 lg:grid-cols-12">
-      <div class="lg:col-span-7">
-        <p class="text-lg leading-relaxed text-steel-700">{somos.intro}</p>
+  <!-- Presentación -->
+  <section class="py-20 lg:py-24">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="relative lg:col-span-5">
+        <div class="absolute -bottom-4 -left-4 hidden h-full w-full rounded-lg border-2 border-amber-500 sm:block" aria-hidden="true"></div>
+        <img
+          src="/servicios/montaje-mecanico-industrial.webp"
+          alt="Equipo de Reserman trabajando en planta"
+          width="900"
+          height="700"
+          loading="lazy"
+          decoding="async"
+          class="relative aspect-[4/3] w-full rounded-lg object-cover shadow-lg"
+        />
       </div>
-      <aside class="space-y-5 lg:col-span-5">
-        <div class="rounded-xl border border-steel-200 bg-steel-100 p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">Misión</h2>
-          <p class="mt-3 leading-relaxed text-navy-600">{somos.mision}</p>
+
+      <div class="lg:col-span-7">
+        <p class="eyebrow">Quiénes somos</p>
+        <h2 class="mt-3 text-xl font-bold leading-[1.65] text-navy-600">{somos.intro}</h2>
+        <div class="mt-6 space-y-4 leading-relaxed text-steel-700">
+          {somos.parrafos.map((p) => <p>{p}</p>)}
         </div>
-        <div class="rounded-xl border border-steel-200 bg-steel-100 p-6">
-          <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">Visión</h2>
-          <p class="mt-3 leading-relaxed text-navy-600">{somos.vision}</p>
-        </div>
-      </aside>
+        <dl class="mt-8 grid gap-6 border-t border-steel-200 pt-8 sm:grid-cols-2">
+          <div class="relative pl-5">
+            <span class="absolute left-0 top-1.5 h-14 w-[2px] bg-amber-500" aria-hidden="true"></span>
+            <dt class="text-4xl font-bold leading-none text-navy-600">10</dt>
+            <dd class="mt-3">
+              <span class="block font-semibold text-navy-600">años de experiencia</span>
+              <span class="mt-1 block text-sm leading-relaxed text-steel-700">en ingeniería y mantenimiento industrial</span>
+            </dd>
+          </div>
+          <div class="relative pl-5">
+            <span class="absolute left-0 top-1.5 h-14 w-[2px] bg-amber-500" aria-hidden="true"></span>
+            <dt class="text-4xl font-bold leading-none text-navy-600">4</dt>
+            <dd class="mt-3">
+              <span class="block font-semibold text-navy-600">sectores</span>
+              <span class="mt-1 block text-sm leading-relaxed text-steel-700">minero, alimentario, cosmético y químico</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
     </div>
   </section>
 
-  <section class="border-t border-steel-200 bg-white pb-20">
+  <!-- Misión y visión -->
+  <section class="bg-navy-600 text-white">
+    <div class="container-site grid md:grid-cols-2 md:divide-x md:divide-white/15">
+      <div class="py-14 md:py-20 md:pr-12 lg:pr-16">
+        <span class="block h-1 w-12 bg-amber-500" aria-hidden="true"></span>
+        <h2 class="mt-5 text-sm font-semibold uppercase tracking-[0.2em] text-amber-500">Misión</h2>
+        <p class="mt-4 text-lg leading-relaxed text-white/90">{somos.mision}</p>
+      </div>
+      <div class="border-t border-white/15 py-14 md:border-t-0 md:py-20 md:pl-12 lg:pl-16">
+        <span class="block h-1 w-12 bg-amber-500" aria-hidden="true"></span>
+        <h2 class="mt-5 text-sm font-semibold uppercase tracking-[0.2em] text-amber-500">Visión</h2>
+        <p class="mt-4 text-lg leading-relaxed text-white/90">{somos.vision}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white pb-20">
     <div class="container-site pt-16">
-      <p class="eyebrow">Valores</p>
-      <h2 class="mt-3 text-3xl font-bold text-[#0B2A3A]">Lo que guía nuestro trabajo</h2>
-      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+      <p class="eyebrow">Clientes</p>
+      <h2 class="mt-3 text-3xl font-bold text-[#0B2A3A]">Nuestros clientes</h2>
+      <p class="mt-4 max-w-3xl leading-relaxed text-steel-700">{somos.clientesTexto}</p>
+      <ul class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
         {
-          somos.valores.map((v) => (
-            <li class="flex items-center gap-3 rounded-xl border border-steel-200 p-5">
-              <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-500 text-steel-700">
-                <Icon name="check" class="h-4 w-4" />
-              </span>
-              <span class="font-semibold text-navy-600">{v}</span>
+          clientes.map((c) => (
+            <li class="group flex h-28 items-center justify-center rounded-xl border border-steel-200/30 bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-lg hover:shadow-navy-600/10">
+              <img
+                src={c.logo}
+                alt={c.nombre}
+                loading="lazy"
+                decoding="async"
+                class="max-h-full max-w-full object-contain opacity-60 transition duration-300 group-hover:scale-105 group-hover:opacity-100"
+              />
             </li>
           ))
         }

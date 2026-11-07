@@ -65,6 +65,9 @@
 .prose-wp ol {
   @apply mb-4 list-decimal space-y-1 pl-6;
 }
+.prose-wp blockquote {
+  @apply my-8 rounded-r-lg border-l-4 border-amber-500 bg-steel-100 p-5 leading-relaxed font-semibold text-navy-600;
+}
 .prose-wp strong {
   @apply font-semibold text-navy-600;
 }

@@ -3,6 +3,8 @@
  * Se usan mientras no haya acceso al WordPress de reserman.cl/admin.
  * Cuando WP esté disponible, src/lib/wp.ts reemplaza estos datos
  * con lo que devuelva la REST API (misma forma de objetos).
+ *
+ * Contenido de servicios y "Somos" según el archivo "Servicios 2027 - RESERMAN.xlsx" del cliente.
  */
 
 export interface Contacto {
@@ -29,9 +31,9 @@ export interface Servicio {
   titulo: string;
   tituloCorto: string;
   resumen: string;
-  icono: 'gestion' | 'procesos' | 'mantenimiento' | 'ingenieria';
-  pregunta?: string;      // gancho tipo "¿Te sientes agobiado...?"
-  claim?: string;         // "TRANQUILO, TE AYUDAREMOS"
+  icono: 'proyectos' | 'soldadura' | 'mantenimiento' | 'montaje' | 'electrica' | 'civiles';
+  pregunta?: string;      // gancho opcional (cabecera de la página)
+  claim?: string;         // título alternativo opcional
   contenido: string;      // HTML
   imagen?: string;        // fondo de la card / cabecera
   items?: string[];
@@ -42,9 +44,15 @@ export interface Servicio {
 export interface Somos {
   titulo: string;
   intro: string;
+  parrafos: string[];
   mision: string;
   vision: string;
-  valores: string[];
+  clientesTexto: string;
+}
+
+export interface Cliente {
+  nombre: string;
+  logo: string;
 }
 
 export interface Slide {
@@ -57,37 +65,40 @@ export interface Slide {
   gradiente: string;   // clases Tailwind del overlay
 }
 
+const overlay =
+  'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]';
+
 /** Slider del home: 3 slides. Cuando exista WP, se puede alimentar desde un CPT `slide`. */
 export const slides: Slide[] = [
   {
-    eyebrow: 'Soluciones industriales',
-    titulo: 'Un partner estratégico para <span class="text-amber-500">optimizar tus procesos productivos</span>',
+    eyebrow: 'Ingeniería y mantenimiento industrial',
+    titulo: 'Un socio de confianza para <span class="text-amber-500">tu operación industrial</span>',
     texto:
-      'Gestión del mantenimiento, optimización de procesos, servicios de mantenimiento e ingeniería para plantas de alimentos, químicas y cosméticas.',
+      'Ingeniería de proyectos, soldadura y fabricación, mantenimiento, montaje mecánico, ingeniería eléctrica y obras civiles menores para los sectores minero, alimentario, cosmético y químico.',
     cta: { label: 'Solicitar cotización', href: '/contacto' },
-    ctaSecundario: { label: 'Ver soluciones', href: '/soluciones' },
+    ctaSecundario: { label: 'Ver servicios', href: '/soluciones' },
     imagen: '/slides/slide-1.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
+    gradiente: overlay,
   },
   {
-    eyebrow: 'Gestión del mantenimiento',
-    titulo: '¿Sumergido en el mantenimiento correctivo? <span class="text-amber-500">Tranquilo, te ayudamos</span>',
+    eyebrow: 'Montaje mecánico industrial',
+    titulo: 'Izajes, retiro y montaje de equipos <span class="text-amber-500">integrados a tu planta</span>',
     texto:
-      'Auditorías de la gestión del mantenimiento basadas en PAS 55 e ISO 55000 para detectar brechas y establecer focos de mejora con información objetiva.',
-    cta: { label: 'Conocer la auditoría', href: '/soluciones/gestion-del-mantenimiento' },
+      'Coordinamos los trabajos con los equipos de operaciones y mantenimiento para integrarlos a las ventanas de intervención de la planta, con foco en la seguridad de las maniobras.',
+    cta: { label: 'Ver montaje mecánico', href: '/soluciones/montaje-mecanico-industrial' },
     ctaSecundario: { label: 'Cotizar', href: '/contacto' },
     imagen: '/slides/slide-2.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
+    gradiente: overlay,
   },
   {
-    eyebrow: 'Optimización de procesos',
-    titulo: '¿No logras cumplir el programa de producción? <span class="text-amber-500">Optimizamos tu línea</span>',
+    eyebrow: 'Mantenimiento industrial',
+    titulo: 'Cuidamos tus equipos para <span class="text-amber-500">mantener tu operación en movimiento</span>',
     texto:
-      'Levantamientos en línea, turno completo, con un informe final que radiografía las deficiencias mecánicas, de proceso, operacionales y de materiales.',
-    cta: { label: 'Ver metodología', href: '/soluciones/optimizacion-de-procesos' },
+      'Mantenimiento preventivo y correctivo para equipos industriales, en nuestro taller o directamente en tus instalaciones.',
+    cta: { label: 'Ver mantenimiento', href: '/soluciones/mantenimiento-industrial' },
     ctaSecundario: { label: 'Cotizar', href: '/contacto' },
     imagen: '/slides/slide-3.webp',
-    gradiente: 'bg-[linear-gradient(100deg,rgba(11,42,58,0.78)_0%,rgba(11,42,58,0.5)_45%,rgba(11,42,58,0.18)_100%)]',
+    gradiente: overlay,
   },
 ];
 
@@ -112,149 +123,206 @@ export const contacto: Contacto = {
 export const somos: Somos = {
   titulo: 'Quiénes somos',
   intro:
-    'Reserman es una empresa nueva en el mercado, pero la experiencia que respalda nuestro portafolio técnico se forja a través de años liderando departamentos de mantenimiento, ingeniería y prevención de riesgos en empresas del ámbito alimentario, químico y cosmético. Tras más de una década contribuyendo al negocio desde dentro de la organización, y entendiendo profundamente las necesidades y estrategias de las áreas operativas, Reserman se embarca en un servicio externo construido sobre experiencia y buenos resultados. Nuestro compromiso es total en la búsqueda de aumentar la rentabilidad de tu negocio.',
+    'En Reserman llevamos 10 años prestando servicios de ingeniería y mantenimiento industrial a empresas de los sectores minero, alimentario, cosmético y químico.',
+  parrafos: [
+    'Buscamos ser un socio de confianza para nuestros clientes y construir relaciones de largo plazo. Nos involucramos desde el inicio, escuchamos sus necesidades y coordinamos cada trabajo con sus equipos, manteniendo una comunicación cercana durante todo el proceso.',
+    'La seguridad es una prioridad. Gestionamos los riesgos en cada etapa para proteger a las personas y cuidar las instalaciones.',
+  ],
   mision:
-    'Facilitar la gestión del mantenimiento y contribuir a la eficiencia de los procesos productivos a través de una colaboración oportuna y a costos razonables.',
+    'Prestar servicios de ingeniería y mantenimiento industrial que respondan a las necesidades de cada cliente. Trabajamos en coordinación con sus equipos y gestionamos los riesgos en cada etapa para proteger a las personas y cuidar las instalaciones.',
   vision:
-    'Ser un partner estratégico que permita a los líderes de operaciones enfocarse en las actividades importantes, a través de soluciones que busquen el máximo rendimiento de los procesos productivos.',
-  valores: ['Transparencia', 'Confianza', 'Honestidad', 'Compromiso', 'Excelencia'],
+    'Ser reconocidos como un socio de confianza en ingeniería y mantenimiento industrial en los sectores minero, alimentario, cosmético y químico. Aspiramos a construir relaciones de largo plazo con nuestros clientes a través de un trabajo seguro y una comunicación cercana.',
+  clientesTexto:
+    'En Reserman elegimos trabajar con un grupo acotado de clientes para dedicarle a cada uno el tiempo y la atención que necesita. Nos involucramos desde el inicio, coordinamos cada trabajo con sus equipos y mantenemos una comunicación cercana. Así construimos relaciones de confianza que perduran en el tiempo.',
 };
+
+export const clientes: Cliente[] = [
+  { nombre: 'IMDEX', logo: '/clientes/imdex.webp' },
+  { nombre: 'Mathiesen', logo: '/clientes/mathiesen.webp' },
+  { nombre: 'Agricovial', logo: '/clientes/agricovial.webp' },
+  { nombre: 'Sanitas', logo: '/clientes/sanitas.webp' },
+  { nombre: 'Impresores', logo: '/clientes/impresores.webp' },
+];
 
 export const servicios: Servicio[] = [
   {
-    slug: 'gestion-del-mantenimiento',
-    imagen: '/servicios/gestion-del-mantenimiento.webp',
-    titulo: 'Gestión del Mantenimiento',
-    tituloCorto: 'Gestión del Mantenimiento',
+    slug: 'ingenieria-y-proyectos-industriales',
+    imagen: '/servicios/ingenieria-y-proyectos-industriales.webp',
+    titulo: 'Ingeniería y proyectos industriales',
+    tituloCorto: 'Ingeniería y proyectos',
     resumen:
-      'Auditorías de la gestión del mantenimiento en plantas industriales, basadas en gestión de activos (PAS 55 / ISO 55000), para detectar brechas y establecer focos de mejora.',
-    icono: 'gestion',
-    pregunta:
-      '¿Te sientes agobiado por estar sumergido en el mantenimiento correctivo y consumido por el día a día?',
-    claim: 'Tranquilo, te ayudaremos',
+      'Gestión y desarrollo técnico de proyectos industriales, desde la definición del alcance hasta la ejecución y entrega.',
+    icono: 'proyectos',
     orden: 1,
-    destacado: true,
+    items: [
+      'Asistencia de un ingeniero para el levantamiento técnico',
+      'Elaboración de planos acotados en 2D y 3D',
+      'Desarrollo de ingeniería mecánica',
+      'Memorias de cálculo para estructuras',
+    ],
     contenido: `
-<h2>Auditorías para la Gestión del Mantenimiento</h2>
-<p>Reserman realiza auditorías de mantenimiento en plantas industriales para determinar si la gestión se está realizando bajo los aspectos clave que permiten un mejor desempeño del área técnica de la compañía.</p>
-<p>El área de Mantenimiento tiene un rol estratégico dentro de la Excelencia Operacional de una planta industrial: debe asegurar la disponibilidad de los activos a costos razonables, por lo que requiere que sus procesos se desempeñen de forma eficaz y eficiente. La Gerencia de Mantenimiento necesita contar con información objetiva y oportuna sobre el nivel de desempeño de sus procesos, de manera de establecer focos de acción sobre los casos relevantes y mitigar los riesgos asociados.</p>
-<h3>Una auditoría te ayuda a responder preguntas como:</h3>
+<p>Ingeniería de proyectos industriales: gestión y desarrollo técnico de proyectos industriales, desde la definición del alcance hasta la ejecución y entrega. Integra la coordinación de especialidades, la planificación, el control de costos, las compras técnicas y el aseguramiento de la calidad, para cumplir los requisitos técnicos, los plazos y el presupuesto. Aplicable a proyectos mecánicos y de procesos industriales, así como a trabajos de fabricación, montaje y mantenimiento.</p>
+<h2>Diseño y fabricación de proyectos industriales según requerimientos</h2>
 <ul>
-<li>¿Conoce la Gerencia de Mantenimiento las fortalezas y debilidades de sus procesos, de modo de identificar brechas y desarrollar acciones de mejora?</li>
-<li>¿Las estrategias y planes de mantenimiento de los activos críticos permiten lograr los niveles de confiabilidad requeridos por la planta?</li>
-<li>¿El personal llena correctamente los registros, en papel y digital, generando información útil para analizar y mejorar los procesos?</li>
+<li>Asistencia de un ingeniero para el levantamiento técnico.</li>
+<li>Recopilación de información relevante del proyecto.</li>
+<li>Diseño y proyección de elementos mecánicos y estructurales.</li>
+<li>Elaboración de planos esquemáticos acotados en 2D y 3D.</li>
+<li>Reuniones de coordinación y revisión de diseños.</li>
+<li>Desarrollo de ingeniería mecánica.</li>
+<li>Elaboración de memorias de cálculo para estructuras.</li>
 </ul>
-<p>Una auditoría de mantenimiento consiste en comparar la situación existente en la empresa con un modelo de excelencia o de clase mundial. La auditoría propuesta está basada en los conceptos de gestión de activos y en las normas <strong>PAS 55</strong> e <strong>ISO 55000</strong>, con una visión práctica y aplicada a la realidad de cada planta.</p>
 `,
   },
   {
-    slug: 'optimizacion-de-procesos',
-    imagen: '/servicios/optimizacion-de-procesos.webp',
-    titulo: 'Optimización de Procesos',
-    tituloCorto: 'Optimización de Procesos',
+    slug: 'soldadura-y-fabricacion-industrial',
+    imagen: '/servicios/soldadura-y-fabricacion-industrial.webp',
+    titulo: 'Soldadura y fabricación industrial',
+    tituloCorto: 'Soldadura y fabricación',
     resumen:
-      'Levantamientos transversales en línea para detectar las causas que impiden el máximo rendimiento de tus procesos productivos: análisis técnico, de proceso, operacional y de materiales.',
-    icono: 'procesos',
-    pregunta: '¿No logras cumplir con el programa de producción?',
-    claim: 'Optimizamos tus procesos productivos',
+      'Soluciones en acero inoxidable y acero al carbono para las industrias alimentaria, farmacéutica y minera.',
+    icono: 'soldadura',
     orden: 2,
-    destacado: true,
-    items: ['Análisis técnico', 'Análisis de proceso', 'Análisis operacional', 'Análisis de materiales'],
+    items: [
+      'Fabricación de estanques, tolvas y equipos a medida',
+      'Piping y montaje de cañerías industriales',
+      'Plataformas, pasarelas, escaleras y estructuras metálicas',
+      'Fabricación y montaje de redes contra incendio',
+      'Reparaciones, mantenimiento y modificaciones de instalaciones',
+    ],
     contenido: `
-<p>Muchas y diferentes son las situaciones que dificultan obtener una producción eficiente, y pocos son los recursos disponibles en las organizaciones para optimizar procesos que cumplan las expectativas para las que fueron adquiridos. Por eso Reserman ofrece rigurosos levantamientos transversales para detectar las causas que no permiten conseguir el máximo rendimiento de los procesos productivos. Además, contamos con proveedores estratégicos que permiten desarrollar soluciones de ingeniería en la búsqueda de la optimización.</p>
-<p>Los procesos productivos en su mayoría presentan deficiencias de distinto origen —mecánico, de proceso, operacional o de materiales— que impactan en el rendimiento esperado de los equipos. <strong>La mayoría de las empresas opera con niveles de OEE por debajo del 70%</strong>, lo que supone una importante pérdida de dinero y un gran margen para la mejora.</p>
-<h2>¿Cómo lo hacemos?</h2>
-<p>Para identificar las desviaciones de un proceso productivo es fundamental observar turnos completos directamente en la línea con problemas, con el objetivo de detectar todos los elementos que no permiten la continuidad del proceso o que no contribuyen a la eficiencia.</p>
-<h3>Metodología en 5 pasos</h3>
-<ol>
-<li>Identificación de la línea con incumplimientos del programa productivo.</li>
-<li>Recopilación de información relevante de la línea (conversación con operadores y líderes).</li>
-<li>Análisis de la línea de inicio a fin, más sus procesos vinculantes.</li>
-<li>Análisis de los datos obtenidos.</li>
-<li>Entrega del informe final.</li>
-</ol>
-<p>El informe final es una radiografía con información objetiva y concreta sobre los aspectos que no generan valor al proceso productivo, para establecer planes de acción que aumenten el rendimiento de la línea.</p>
-<h2>Tipos de deficiencias que impactan un proceso productivo</h2>
-<h3>Deficiencias mecánicas</h3>
-<p>Toda detención provocada por equipos, componentes o sistemas de la línea de producción que no permite conseguir el rendimiento esperado. Por ejemplo, en una línea de envasado de líquidos en frascos de 1 L:</p>
+<p>Desarrollamos proyectos desde el levantamiento en terreno y la elaboración de planos hasta la fabricación y el montaje, con foco en la calidad, la seguridad y los requerimientos de cada cliente.</p>
+<h2>Nuestros servicios</h2>
 <ul>
-<li>Dificultades en los traspasos de frascos de un equipo a otro (caídas constantes).</li>
-<li>Guías de transporte con diseño deficiente o mal ajustadas que dificultan el flujo (trabamiento).</li>
-<li>Cambios de formato mal realizados que generan detenciones durante el turno.</li>
-<li>Herramientas incorrectas o poco eficientes que impiden trabajar de forma segura y eficiente.</li>
-<li>Averías constantes (mecánicas, eléctricas, de instrumentación) que retrasan la producción.</li>
-<li>Cuellos de botella.</li>
+<li>Fabricación de estanques, tolvas y equipos a medida.</li>
+<li>Piping y montaje de cañerías industriales.</li>
+<li>Plataformas, pasarelas, escaleras y estructuras metálicas.</li>
+<li>Fabricación y montaje de redes contra incendio.</li>
+<li>Reparaciones, mantenimiento y modificaciones de instalaciones.</li>
 </ul>
-<h3>Deficiencias de proceso, operacionales y de materiales</h3>
-<p>Situaciones propias del proceso, de la operación o de los insumos que reducen el rendimiento de la línea. Se levantan y documentan con la misma metodología para construir un plan de acción integral.</p>
+<p>Contamos con soldadores calificados y trabajamos en terreno con los equipos, herramientas y elementos de protección necesarios, cumpliendo las exigencias de seguridad de cada instalación.</p>
+<blockquote>¿Tiene una idea o un proyecto? Desarrollamos los planos y lo llevamos a la realidad.</blockquote>
 `,
   },
   {
-    slug: 'servicios-de-mantenimiento',
-    imagen: '/servicios/servicios-de-mantenimiento.webp',
-    titulo: 'Servicios de Mantenimiento',
-    tituloCorto: 'Servicios de Mantenimiento',
-    resumen:
-      'Planes de mantenimiento a convenir. Nos hacemos cargo de las actividades secundarias para que tu equipo se enfoque en las tareas fundamentales del departamento.',
+    slug: 'mantenimiento-industrial',
+    imagen: '/servicios/mantenimiento-industrial.webp',
+    titulo: 'Mantenimiento industrial',
+    tituloCorto: 'Mantenimiento industrial',
+    resumen: 'Cuidamos tus equipos para mantener tu operación en movimiento.',
     icono: 'mantenimiento',
     orden: 3,
     items: [
-      'Mantenimiento preventivo de equipos menores o auxiliares',
-      'Desarme de maquinarias y equipos bajo supervisión local',
-      'Limpieza de máquinas y equipos en stand by o en mantenimiento',
-      'Lubricación rutinaria bajo programa semanal',
-      'Limpieza industrial (muros, pisos, utensilios de producción)',
-      'Apoyo en paradas de planta o mantenimientos preventivos',
+      'Mantenimiento preventivo',
+      'Mantenimiento correctivo',
+      'Inspección técnica',
+      'En nuestro taller o en terreno',
     ],
     contenido: `
-<p>Reserman ofrece planes de mantenimiento a convenir con el cliente según sus necesidades. Nuestra propuesta busca hacernos cargo de las actividades secundarias y permitir que el equipo de mantenimiento de la empresa se enfoque en las tareas fundamentales del departamento.</p>
-<h2>Actividades</h2>
+<p>Ofrecemos servicios de mantenimiento preventivo y correctivo para equipos industriales, tanto en nuestro taller como directamente en tus instalaciones. Adaptamos cada intervención a las necesidades de tu operación, con foco en la seguridad, la confiabilidad y la continuidad productiva.</p>
+<h2>Mantenimiento en nuestro taller</h2>
+<p>Realizamos la revisión, el diagnóstico, la reparación y el ajuste de equipos y componentes industriales. Evaluamos su condición para definir los trabajos necesarios y recuperar su funcionamiento.</p>
+<h2>Mantenimiento en terreno</h2>
+<p>Nos trasladamos a tus instalaciones para realizar inspecciones, mantenimiento programado y reparaciones. Atendemos tus equipos en su lugar de operación, facilitando la intervención de maquinaria que requiere atención en planta.</p>
+<h2>Soluciones para tu industria</h2>
 <ul>
-<li>Mantenimiento preventivo de equipos menores o auxiliares.</li>
-<li>Desarme de maquinarias y/o equipos bajo supervisión local.</li>
-<li>Limpieza de máquinas y/o equipos en stand by o en proceso de mantenimiento.</li>
-<li>Lubricación rutinaria bajo un programa semanal.</li>
-<li>Limpieza industrial (muros, pisos, utensilios de producción).</li>
-<li>Apoyo secundario en paradas de planta o mantenimientos preventivos.</li>
+<li><strong>Mantenimiento preventivo:</strong> trabajos programados para anticipar fallas y prolongar la vida útil de tus equipos.</li>
+<li><strong>Mantenimiento correctivo:</strong> diagnóstico y reparación para restablecer su operatividad.</li>
+<li><strong>Inspección técnica:</strong> evaluación del estado de equipos y componentes para identificar necesidades de intervención.</li>
 </ul>
-<h2>Ejemplos de trabajos realizados</h2>
-<ul>
-<li>Limpieza general de máquinas Doypack.</li>
-<li>Limpieza de rodillos de transporte de pallets.</li>
-<li>Mantenimiento y limpieza de rodillos motorizados (transporte de cajas).</li>
-<li>Limpieza general de máquina sachetera.</li>
-</ul>
+<blockquote>En nuestro taller o en tu planta, somos tu aliado en mantenimiento industrial.</blockquote>
 `,
   },
   {
-    slug: 'servicios-de-ingenieria',
-    imagen: '/servicios/servicios-de-ingenieria.webp',
-    titulo: 'Servicios de Ingeniería',
-    tituloCorto: 'Servicios de Ingeniería',
+    slug: 'montaje-mecanico-industrial',
+    imagen: '/servicios/montaje-mecanico-industrial.webp',
+    titulo: 'Montaje mecánico industrial',
+    tituloCorto: 'Montaje mecánico',
     resumen:
-      'Instalaciones eléctricas industriales y fabricación y montaje de estructuras metálicas, con especialidad en acero inoxidable.',
-    icono: 'ingenieria',
+      'Izajes, retiro de equipamiento y montaje de equipos industriales para proyectos de instalación, recambio y ampliación de plantas.',
+    icono: 'montaje',
     orden: 4,
     items: [
-      'Fabricación y montaje de estructuras metálicas (especialistas en inoxidable)',
-      'Instalación eléctrica industrial',
-      'Proyectos de plantas industriales (fuerza, alumbrado, control, corrientes débiles)',
-      'Estudio de instalaciones existentes y levantamientos eléctricos',
-      'Modernización de tableros de fuerza y control',
-      'Búsqueda y reparación de fallas eléctricas',
-      'Armado de tableros eléctricos de distribución, fuerza y alumbrado',
+      'Izaje y posicionamiento de cargas',
+      'Desmontaje y retiro de equipamiento',
+      'Montaje de equipos industriales',
+      'Trabajos complementarios',
     ],
     contenido: `
-<h2>Fabricación y montaje de estructuras metálicas</h2>
-<p>Diseño, fabricación y montaje de estructuras metálicas para la industria, con especialidad en <strong>acero inoxidable</strong> para plantas de alimentos, químicas y cosméticas.</p>
-<h2>Instalación eléctrica industrial</h2>
+<p>Planificamos cada maniobra según las características de la carga, los accesos y las condiciones de operación de la planta.</p>
 <ul>
-<li>Proyectos de plantas industriales (fuerza, alumbrado, control, corrientes débiles).</li>
-<li>Estudio de instalaciones existentes y levantamientos eléctricos.</li>
-<li>Modernización de tableros de fuerza y control.</li>
-<li>Búsqueda y reparación de fallas eléctricas en general.</li>
-<li>Armado de tableros eléctricos de distribución, fuerza y alumbrado.</li>
+<li><strong>Izaje y posicionamiento de cargas.</strong> Levantamiento, desplazamiento y ubicación de maquinaria, componentes y estructuras metálicas.</li>
+<li><strong>Desmontaje y retiro de equipamiento.</strong> Desarme, extracción y traslado interno de equipos en desuso o que requieren reemplazo.</li>
+<li><strong>Montaje de equipos industriales.</strong> Instalación, nivelación, alineación y anclaje de equipos como bombas, motores, reductores y transportadores.</li>
+<li><strong>Trabajos complementarios.</strong> Montaje de bases, soportes, plataformas y estructuras auxiliares asociadas a la instalación.</li>
 </ul>
+<p>Coordinamos los trabajos con los equipos de operaciones y mantenimiento para integrarlos a las ventanas de intervención de la planta, con foco en la seguridad de las maniobras y la correcta instalación de los equipos.</p>
+<blockquote><strong>Solicita una cotización.</strong> Cuéntanos qué equipo necesitas izar, retirar o instalar y en qué planta se realizará el trabajo.</blockquote>
+`,
+  },
+  {
+    slug: 'ingenieria-electrica',
+    imagen: '/servicios/ingenieria-electrica.webp',
+    titulo: 'Ingeniería eléctrica',
+    tituloCorto: 'Ingeniería eléctrica',
+    resumen:
+      'Soluciones de ingeniería eléctrica para proyectos industriales y comerciales: diseño, fabricación, modernización y mantenimiento de instalaciones.',
+    icono: 'electrica',
+    orden: 5,
+    items: [
+      'Fabricación de tableros eléctricos',
+      'Proyectos eléctricos para plantas industriales',
+      'Estudios y levantamientos eléctricos',
+      'Modernización de tableros de fuerza y control',
+      'Búsqueda y reparación de fallas eléctricas',
+      'Proyectos de iluminación LED',
+    ],
+    contenido: `
+<p>En RESERMAN ofrecemos soluciones de ingeniería eléctrica para proyectos industriales y comerciales. Apoyamos a nuestros clientes en el diseño, fabricación, modernización y mantenimiento de sus instalaciones, con foco en la seguridad, la continuidad operativa y el uso eficiente de la energía.</p>
+<h2>Nuestros servicios</h2>
+<ul>
+<li><strong>Fabricación de tableros eléctricos:</strong> tableros de distribución, fuerza y alumbrado, desarrollados según los requerimientos de cada instalación.</li>
+<li><strong>Proyectos eléctricos para plantas industriales:</strong> diseño de sistemas de fuerza, alumbrado, control y corrientes débiles.</li>
+<li><strong>Estudios y levantamientos eléctricos:</strong> evaluación de instalaciones existentes y recopilación de información técnica para planificar mejoras, ampliaciones y actualizaciones.</li>
+<li><strong>Modernización de tableros de fuerza y control:</strong> actualización de equipos y componentes para mejorar su funcionamiento y facilitar su mantenimiento.</li>
+<li><strong>Búsqueda y reparación de fallas eléctricas:</strong> diagnóstico y solución de problemas en instalaciones, circuitos y equipos eléctricos.</li>
+<li><strong>Proyectos de iluminación LED:</strong> diseño de soluciones de iluminación orientadas a mejorar la visibilidad, optimizar el consumo y reducir los costos de operación.</li>
+</ul>
+<blockquote><strong>Conversemos sobre su próximo proyecto.</strong> ¿Necesita desarrollar una instalación, modernizar sus tableros o resolver una falla eléctrica? Cuéntenos sus requerimientos y evaluemos una solución para su empresa.</blockquote>
+`,
+  },
+  {
+    slug: 'obras-civiles-menores',
+    imagen: '/servicios/obras-civiles-menores.webp',
+    titulo: 'Obras civiles menores para la industria',
+    tituloCorto: 'Obras civiles menores',
+    resumen:
+      'Construimos, reparamos y mejoramos sus instalaciones para apoyar la continuidad de su operación.',
+    icono: 'civiles',
+    orden: 6,
+    items: [
+      'Radieres y pavimentos',
+      'Albañilería y reparaciones',
+      'Adecuación de espacios',
+      'Techumbres e impermeabilización',
+      'Pintura y terminaciones',
+      'Obras complementarias',
+      'Aire acondicionado y climatización',
+    ],
+    contenido: `
+<p>Realizamos obras civiles menores y mantenimiento de infraestructura para plantas industriales, bodegas, centros de distribución e instalaciones productivas. Nos enfocamos en soluciones duraderas, una ejecución segura y la coordinación de los trabajos con las actividades de su empresa.</p>
+<h2>Nuestros servicios</h2>
+<ul>
+<li><strong>Radieres y pavimentos:</strong> construcción y reparación de superficies de hormigón para áreas de trabajo, circulación y almacenamiento.</li>
+<li><strong>Albañilería y reparaciones:</strong> ejecución y reparación de muros, tabiques, estucos y elementos de infraestructura.</li>
+<li><strong>Adecuación de espacios:</strong> remodelación de oficinas, baños, vestidores, comedores y áreas de apoyo a la operación.</li>
+<li><strong>Techumbres e impermeabilización:</strong> reparación de cubiertas, sellado de filtraciones y mantenimiento de canaletas y bajadas de aguas lluvias.</li>
+<li><strong>Pintura y terminaciones:</strong> renovación y protección de superficies interiores y exteriores.</li>
+<li><strong>Obras complementarias:</strong> construcción y reparación de accesos, veredas, soleras, cierres perimetrales y sistemas de drenaje.</li>
+<li><strong>Aire acondicionado y climatización:</strong> instalación, mantenimiento preventivo y reparación de equipos de aire acondicionado para oficinas, salas de control y otras áreas de apoyo en plantas industriales y centros de distribución.</li>
+</ul>
+<h2>Trabajos coordinados con su operación</h2>
+<p>Planificamos cada intervención según las condiciones de sus instalaciones, los accesos disponibles y los horarios de trabajo. Nuestro objetivo es reducir las interferencias con la actividad productiva y entregar espacios funcionales, con terminaciones acordes al uso industrial.</p>
 `,
   },
 ];
