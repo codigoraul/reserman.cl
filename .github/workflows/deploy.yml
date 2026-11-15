@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # Lo dispara WordPress (plugin Reserman Headless) cuando el cliente guarda cambios
+  repository_dispatch:
+    types: [wp-update]
 
 jobs:
   build-and-deploy:
@@ -23,6 +26,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          WP_URL: https://reserman.cl/admin
         run: npm run build
 
       - name: Deploy via FTP (lftp)
