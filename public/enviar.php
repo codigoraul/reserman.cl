@@ -6,8 +6,9 @@
  */
 declare(strict_types=1);
 
-// PRUEBA: llega a codigoraul@gmail.com. Cuando esté validado, cambiar a 'contacto@reserman.cl'.
-const DESTINO   = 'codigoraul@gmail.com';        // quién recibe las solicitudes
+// Destinatarios de las solicitudes (separados por coma).
+// Para la prueba del cliente llega a contacto@reserman.cl y también a codigoraul@gmail.com; quitar este último al terminar.
+const DESTINO   = 'contacto@reserman.cl, codigoraul@gmail.com';
 const REMITENTE = 'no-responder@reserman.cl';    // debe ser una dirección del propio dominio
 const MAX_POR_HORA = 5;                          // solicitudes por IP y hora
 
