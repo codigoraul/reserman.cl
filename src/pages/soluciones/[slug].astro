@@ -57,7 +57,7 @@ const otros = todos.filter((o) => o.slug !== s.slug);
         <div class="rounded-xl border border-steel-200 bg-white p-6 shadow-sm">
           <h2 class="text-lg font-bold text-navy-600">Cotiza este servicio</h2>
           <p class="mb-5 mt-1 text-sm text-steel-400">Te respondemos en horario hábil.</p>
-          <ContactForm contacto={contacto} compact />
+          <ContactForm contacto={contacto} servicio={s.titulo} compact />
         </div>
 
         <div class="rounded-xl border border-steel-200 p-6">

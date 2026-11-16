@@ -1,60 +1,118 @@
 ---
 import Icon from './Icon.astro';
+import { getServicios } from '../lib/wp';
 import type { Contacto } from '../data/site';
 interface Props {
   contacto: Contacto;
   compact?: boolean;
+  servicio?: string; // título del servicio a preseleccionar (páginas de servicio)
 }
-const { contacto, compact = false } = Astro.props;
+const { contacto, compact = false, servicio = '' } = Astro.props;
+const servicios = await getServicios();
+const campo =
+  'w-full rounded-md border border-steel-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30';
+const waTexto = encodeURIComponent('Hola Reserman, quisiera hacer una consulta.');
 ---
 
 <!--
-  Formulario estático. Opciones para procesarlo:
-  - action a un script PHP en el hosting cPanel (ej: /enviar.php)
-  - Formspree / Web3Forms (cambiar action y method="POST")
-  Por ahora abre WhatsApp con el mensaje armado (funciona sin backend).
+  Envía la solicitud por correo a través de /enviar.php (hosting cPanel, ver public/enviar.php).
+  WhatsApp queda como botón aparte.
 -->
-<form id="form-contacto" class="grid gap-4 sm:grid-cols-2" data-whatsapp={contacto.whatsapp} novalidate>
-  <div class="sm:col-span-1">
-    <label for="nombre" class="mb-1.5 block text-sm font-semibold text-navy-600">Nombre</label>
-    <input id="nombre" name="nombre" type="text" required autocomplete="name" class="w-full rounded-md border border-steel-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30" />
+<form id="form-contacto" class="grid gap-4 sm:grid-cols-2" novalidate>
+  <div>
+    <label for="nombre" class="mb-1.5 block text-sm font-semibold text-navy-600">Nombre y apellido <span class="text-orange-500">*</span></label>
+    <input id="nombre" name="nombre" type="text" required maxlength="100" autocomplete="name" class={campo} />
   </div>
-  <div class="sm:col-span-1">
+  <div>
+    <label for="empresa" class="mb-1.5 block text-sm font-semibold text-navy-600">Empresa</label>
+    <input id="empresa" name="empresa" type="text" maxlength="120" autocomplete="organization" class={campo} />
+  </div>
+  <div>
+    <label for="email" class="mb-1.5 block text-sm font-semibold text-navy-600">Correo electrónico <span class="text-orange-500">*</span></label>
+    <input id="email" name="email" type="email" required maxlength="150" autocomplete="email" class={campo} />
+  </div>
+  <div>
     <label for="telefono" class="mb-1.5 block text-sm font-semibold text-navy-600">Teléfono</label>
-    <input id="telefono" name="telefono" type="tel" autocomplete="tel" class="w-full rounded-md border border-steel-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30" />
+    <input id="telefono" name="telefono" type="tel" maxlength="40" autocomplete="tel" class={campo} />
   </div>
   <div class="sm:col-span-2">
-    <label for="email" class="mb-1.5 block text-sm font-semibold text-navy-600">Correo electrónico</label>
-    <input id="email" name="email" type="email" required autocomplete="email" class="w-full rounded-md border border-steel-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30" />
+    <label for="servicio" class="mb-1.5 block text-sm font-semibold text-navy-600">Servicio de interés</label>
+    <select id="servicio" name="servicio" class={campo}>
+      <option value="">Seleccione un servicio</option>
+      {servicios.map((s) => <option value={s.titulo} selected={s.titulo === servicio}>{s.titulo}</option>)}
+      <option value="Otra consulta">Otra consulta</option>
+    </select>
   </div>
   <div class="sm:col-span-2">
-    <label for="mensaje" class="mb-1.5 block text-sm font-semibold text-navy-600">Mensaje</label>
-    <textarea id="mensaje" name="mensaje" rows={compact ? 4 : 6} required class="w-full rounded-md border border-steel-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"></textarea>
+    <label for="mensaje" class="mb-1.5 block text-sm font-semibold text-navy-600">Mensaje <span class="text-orange-500">*</span></label>
+    <textarea id="mensaje" name="mensaje" rows={compact ? 4 : 6} required minlength="10" maxlength="3000" placeholder="Describa brevemente su requerimiento." class={campo}></textarea>
   </div>
-  <div class="sm:col-span-2 flex flex-wrap items-center gap-4">
-    <button type="submit" class="btn-primary">
-      Enviar por WhatsApp <Icon name="whatsapp" class="h-4 w-4" />
+
+  <!-- Campo trampa para bots (no se muestra) y marca de tiempo -->
+  <div class="hidden" aria-hidden="true">
+    <label>No completar <input type="text" name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  <input type="hidden" name="t" id="form-t" value="" />
+
+  <p id="form-estado" role="status" aria-live="polite" class="hidden rounded-md px-4 py-3 text-sm sm:col-span-2"></p>
+
+  <div class="flex flex-wrap items-center gap-3 sm:col-span-2">
+    <button type="submit" id="form-enviar" class="btn-primary">
+      Enviar solicitud <Icon name="mail" class="h-4 w-4" />
     </button>
-    <p class="text-xs text-steel-400">También puedes escribirnos a <a href={`mailto:${contacto.email}`} class="font-semibold text-navy-600">{contacto.email}</a></p>
+    <a
+      href={`https://wa.me/${contacto.whatsapp}?text=${waTexto}`}
+      target="_blank"
+      rel="noopener"
+      class="inline-flex items-center justify-center gap-2 rounded-md border border-steel-200 px-6 py-3 text-sm font-semibold text-navy-600 transition hover:border-amber-500"
+    >
+      Escribir por WhatsApp <Icon name="whatsapp" class="h-4 w-4" />
+    </a>
   </div>
+  <p class="text-xs text-steel-400 sm:col-span-2">
+    También puede escribirnos a <a href={`mailto:${contacto.email}`} class="font-semibold text-navy-600">{contacto.email}</a>.
+    Los campos marcados con <span class="text-orange-500">*</span> son obligatorios.
+  </p>
 </form>
 
-<script>
-  const form = document.getElementById('form-contacto') as HTMLFormElement | null;
-  form?.addEventListener('submit', (e) => {
+<script define:vars={{ email: contacto.email }}>
+  const form = document.getElementById('form-contacto');
+  const estado = document.getElementById('form-estado');
+  const boton = document.getElementById('form-enviar');
+  const marca = document.getElementById('form-t');
+  if (marca) marca.value = String(Date.now());
+
+  // La ruta de enviar.php se calcula desde la raíz del sitio (funciona también si está en una subcarpeta)
+  const icono = document.querySelector('link[rel~="icon"]');
+  const endpoint = new URL('enviar.php', icono ? icono.href : location.href).href;
+
+  function mostrar(ok, texto) {
+    estado.textContent = texto;
+    estado.className =
+      'rounded-md px-4 py-3 text-sm sm:col-span-2 ' +
+      (ok ? 'bg-steel-100 text-navy-600 border border-amber-500' : 'bg-steel-100 text-steel-700 border border-orange-500');
+  }
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
-    const fd = new FormData(form);
-    const texto = [
-      `Hola Reserman, mi nombre es ${fd.get('nombre')}.`,
-      fd.get('telefono') ? `Teléfono: ${fd.get('telefono')}` : '',
-      `Email: ${fd.get('email')}`,
-      '',
-      String(fd.get('mensaje')),
-    ]
-      .filter((l) => l !== '')
-      .join('\n');
-    const num = form.dataset.whatsapp;
-    window.open(`https://wa.me/${num}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+    boton.disabled = true;
+    boton.classList.add('opacity-60');
+    try {
+      const res = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        form.reset();
+        if (marca) marca.value = String(Date.now());
+        mostrar(true, 'Su solicitud fue enviada correctamente. Nos pondremos en contacto a la brevedad.');
+      } else {
+        mostrar(false, data.error || 'No fue posible enviar la solicitud. Escríbanos a ' + email + ' o por WhatsApp.');
+      }
+    } catch {
+      mostrar(false, 'No fue posible enviar la solicitud. Escríbanos a ' + email + ' o por WhatsApp.');
+    } finally {
+      boton.disabled = false;
+      boton.classList.remove('opacity-60');
+    }
   });
 </script>
