@@ -34,6 +34,19 @@ const otros = todos.filter((o) => o.slug !== s.slug);
           </span>
           <p class="text-lg font-semibold text-navy-600">{s.resumen}</p>
         </div>
+        {
+          s.imagen && (
+            <img
+              src={s.imagen}
+              alt={s.titulo}
+              width="900"
+              height="700"
+              loading="lazy"
+              decoding="async"
+              class="mb-10 aspect-[16/10] w-full rounded-xl object-cover shadow-md"
+            />
+          )
+        }
         <Fragment set:html={s.contenido} />
       </article>
 
