@@ -14,6 +14,11 @@ export async function getStaticPaths() {
 const { servicio: s } = Astro.props;
 const [contacto, todos] = await Promise.all([getContacto(), getServicios()]);
 const otros = todos.filter((o) => o.slug !== s.slug);
+
+// La imagen va debajo del primer párrafo del contenido
+const corte = s.contenido.indexOf('</p>');
+const antes = corte >= 0 ? s.contenido.slice(0, corte + 4) : '';
+const despues = corte >= 0 ? s.contenido.slice(corte + 4) : s.contenido;
 ---
 
 <Layout title={s.titulo} description={s.resumen}>
@@ -34,6 +39,7 @@ const otros = todos.filter((o) => o.slug !== s.slug);
           </span>
           <p class="text-lg font-semibold text-navy-600">{s.resumen}</p>
         </div>
+        <Fragment set:html={antes} />
         {
           s.imagen && (
             <img
@@ -43,11 +49,11 @@ const otros = todos.filter((o) => o.slug !== s.slug);
               height="700"
               loading="lazy"
               decoding="async"
-              class="mb-10 aspect-[16/10] w-full rounded-xl object-cover shadow-md"
+              class="my-8 aspect-[16/10] w-full rounded-xl object-cover shadow-md"
             />
           )
         }
-        <Fragment set:html={s.contenido} />
+        <Fragment set:html={despues} />
       </article>
 
       <aside class="space-y-6 lg:col-span-4">
